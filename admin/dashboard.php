@@ -57,7 +57,7 @@
           </div>
         </div>
         <div class="table-responsive">
-          <table class="table align-middle">
+          <table id="tablaPedidos" class="table align-middle">
             <thead>
               <tr>
                 <th>ID</th>
@@ -86,7 +86,7 @@
           <label for="searchCliente" class="form-label">Buscar cliente</label>
           <input id="searchCliente" type="search" class="form-control mb-3" placeholder="Nombre o telefono">
           <div class="table-responsive">
-            <table class="table align-middle mb-0">
+            <table id="tablaClientes" class="table align-middle mb-0">
               <thead><tr><th>Nombre</th><th>Telefono</th><th>Estado</th></tr></thead>
               <tbody>
                 <tr><td>Lucia Perez</td><td>999777111</td><td>Activo</td></tr>
@@ -103,7 +103,7 @@
           <label for="searchProducto" class="form-label">Buscar producto</label>
           <input id="searchProducto" type="search" class="form-control mb-3" placeholder="Nombre o categoria">
           <div class="table-responsive mb-3">
-            <table class="table align-middle mb-0">
+            <table id="tablaProductos" class="table align-middle mb-0">
               <thead><tr><th>Producto</th><th>Categoria</th><th>Precio</th></tr></thead>
               <tbody>
                 <tr><td>Burger Fuego</td><td>Hamburguesas</td><td>S/ 22.90</td></tr>
@@ -148,5 +148,6 @@
       </div>
     </section>
   </main>
+  <script src="../assets/js/admin.js"></script>
 </body>
 </html>
