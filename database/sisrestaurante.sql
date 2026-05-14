@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS pagos (
 -- Contrasena: Admin2026* | hash bcrypt generado con PASSWORD_BCRYPT, cost=12
 INSERT INTO usuarios (nombre, correo, clave, rol) VALUES
   ('Administrador', 'admin@sisrestaurante.com',
-   '$2y$12$oKpKWFJ3lgWLWuK.b1r0bOzF8v7sUgdRHcMt3NpVSPaRElE2mT0sy', 'admin'),
+  '$2y$12$uiEvG/HX1AodLJTsFenbyOk3UtJ0JrP5TptuOuknBtpjNC/R79.OO', 'admin'),
 -- Contrasena: Empleado2026*
   ('Alex Rios',     'alex@sisrestaurante.com',
    '$2y$12$QmXkz5nL0OWo2sJ9t4Hd8eSvGJzBuyNdtH9K6n2pTVDIaKkHLUjXa', 'empleado'),

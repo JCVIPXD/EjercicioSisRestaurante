@@ -31,8 +31,29 @@ Proyecto academico para un restaurante local con modulo publico y panel interno.
 - Login admin: /SisRestaurante/admin/login.php
 - Dashboard: /SisRestaurante/admin/dashboard.php
 
-## Siguiente fase sugerida
+## Guia rapida (super simple)
 
-- Implementar base de datos y conexion real.
-- Crear CRUD con persistencia para cada modulo.
-- Agregar autenticacion y autorizacion real para admin y empleado.
+### 1) Usar como cliente (pagina publica)
+
+1. Entra a `/SisRestaurante/index.php`.
+2. Revisa el menu por categorias y elige un producto.
+3. Haz clic en **Pedir ahora** o llena el formulario manualmente.
+4. Completa nombre, telefono, direccion, producto y cantidad.
+5. Pulsa **Enviar pedido**.
+6. Si todo salio bien, veras un mensaje de confirmacion.
+
+### 2) Usar como administrador
+
+1. Entra a `/SisRestaurante/admin/login.php`.
+2. Inicia sesion con:
+	- Correo: `admin@sisrestaurante.com`
+	- Clave: `Admin2026*`
+3. En el dashboard revisa los indicadores principales.
+4. En el menu lateral administra: clientes, productos, categorias, pedidos, empleados y pagos.
+5. Para salir, usa la opcion **Cerrar sesion**.
+
+### 3) Tip rapido si no deja ingresar
+
+1. Verifica que la base `sisrestaurante` este importada.
+2. Asegura que estas usando exactamente el correo y clave de arriba.
+3. Si persiste, recarga la pagina con `Ctrl + F5`.
