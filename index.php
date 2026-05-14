@@ -1,3 +1,58 @@
+<?php
+require_once 'config/database.php';
+require_once 'model/Producto.php';
+require_once 'model/Cliente.php';
+require_once 'model/Pedido.php';
+
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+$msgPedido  = '';
+$tipoPedido = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_pedido'])) {
+  $nombre     = trim($_POST['nombre'] ?? '');
+  $telefono   = trim($_POST['telefono'] ?? '');
+  $direccion  = trim($_POST['direccion'] ?? '');
+  $productoId = (int)($_POST['producto'] ?? 0);
+  $cantidad   = max(1, (int)($_POST['cantidad'] ?? 1));
+  $entrega    = $_POST['entrega'] ?? '';
+  $obs        = trim($_POST['observaciones'] ?? '');
+
+  if ($nombre && $telefono && $direccion && $productoId && $entrega) {
+    try {
+      $prod = Producto::porId($productoId);
+      if ($prod) {
+        $cli = Cliente::porTelefono($telefono);
+        $clienteId = $cli ? $cli['id'] : Cliente::crear(['nombre' => $nombre, 'telefono' => $telefono, 'direccion' => $direccion]);
+        Pedido::crear([
+          'cliente_id'    => $clienteId,
+          'producto_id'   => $productoId,
+          'cantidad'      => $cantidad,
+          'total'         => $prod['precio'] * $cantidad,
+          'forma_entrega' => $entrega,
+          'observaciones' => $obs,
+        ]);
+        $_SESSION['flash_public'] = 'ok';
+      }
+    } catch (Exception $e) {
+      $_SESSION['flash_public'] = 'error';
+    }
+  } else {
+    $_SESSION['flash_public'] = 'campos';
+  }
+  header('Location: index.php#pedido');
+  exit;
+}
+
+$flashPublic = $_SESSION['flash_public'] ?? '';
+unset($_SESSION['flash_public']);
+
+try {
+  $productosDB = Producto::activos();
+} catch (Exception $e) {
+  $productosDB = [];
+}
+?>
 <!doctype html>
 <html lang="es">
 <head>
@@ -80,7 +135,15 @@
           <p class="mb-0">Completa tus datos para registrar el pedido.</p>
         </div>
         <div class="col-12 col-lg-7">
-          <form id="orderForm" class="order-form" novalidate>
+          <?php if ($flashPublic === 'ok'): ?>
+          <div class="alert alert-success">Pedido registrado correctamente. Nos contactaremos pronto.</div>
+          <?php elseif ($flashPublic === 'campos'): ?>
+          <div class="alert alert-warning">Completa todos los campos obligatorios.</div>
+          <?php elseif ($flashPublic === 'error'): ?>
+          <div class="alert alert-danger">Ocurrio un error. Intenta nuevamente.</div>
+          <?php endif; ?>
+          <form id="orderForm" class="order-form" method="POST" action="index.php" novalidate>
+            <input type="hidden" name="_pedido" value="1">
             <div class="row g-3">
               <div class="col-12 col-md-6">
                 <label for="nombre" class="form-label">Nombre</label>
@@ -150,6 +213,16 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+  window.menuProducts = <?= json_encode(array_map(fn($p) => [
+      'id'          => (int)$p['id'],
+      'category'    => $p['categoria_slug'],
+      'name'        => $p['nombre'],
+      'description' => $p['descripcion'],
+      'price'       => (float)$p['precio'],
+      'image'       => $p['imagen'] ?? '',
+  ], $productosDB), JSON_UNESCAPED_UNICODE) ?>;
+  </script>
   <script src="assets/js/app.js"></script>
 </body>
 </html>

@@ -1,59 +1,5 @@
-const products = [
-    {
-        id: 1,
-        category: "hamburguesas",
-        name: "Burger Fuego",
-        description: "Carne angus, cheddar, cebolla crispy y salsa de la casa.",
-        price: 22.9,
-        image:
-            "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-        id: 2,
-        category: "pizzas",
-        name: "Pizza Andina",
-        description: "Queso mozzarella, pepperoni y vegetales asados.",
-        price: 35.5,
-        image:
-            "https://images.unsplash.com/photo-1548365328-8b849e1e2f2d?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-        id: 3,
-        category: "bebidas",
-        name: "Limonada frozen",
-        description: "Limon natural, hierbabuena y toque de gengibre.",
-        price: 9.9,
-        image:
-            "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-        id: 4,
-        category: "postres",
-        name: "Brownie volcan",
-        description: "Brownie tibio con helado de vainilla y fudge.",
-        price: 14.5,
-        image:
-            "https://images.unsplash.com/photo-1606313564200-e75d5e30476a?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-        id: 5,
-        category: "almuerzos",
-        name: "Lomo saltado",
-        description: "Filete salteado, papas crocantes y arroz graneado.",
-        price: 28,
-        image:
-            "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80"
-    },
-    {
-        id: 6,
-        category: "combos",
-        name: "Combo Local",
-        description: "Hamburguesa clasica, papas y bebida mediana.",
-        price: 29.9,
-        image:
-            "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=900&q=80"
-    }
-];
+// Productos cargados desde BD via PHP (ver index.php)
+const products = window.menuProducts || [];
 
 const menuGrid = document.getElementById("menuGrid");
 const chips = document.querySelectorAll(".chip");
@@ -129,20 +75,7 @@ menuGrid.addEventListener("click", (event) => {
     document.getElementById("pedido").scrollIntoView({ behavior: "smooth" });
 });
 
-orderForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const formData = new FormData(orderForm);
-    const requiredFields = ["nombre", "telefono", "direccion", "producto", "cantidad", "entrega"];
-    const hasEmpty = requiredFields.some((field) => !formData.get(field));
-    if (hasEmpty) {
-        formMsg.textContent = "Completa todos los campos obligatorios.";
-        formMsg.style.color = "#8c2618";
-        return;
-    }
-    formMsg.textContent = "Pedido enviado correctamente.";
-    formMsg.style.color = "#2b8742";
-    orderForm.reset();
-});
+// La validacion y el guardado del pedido se manejan en PHP (POST a index.php)
 
 renderMenu(products);
 loadProductOptions();

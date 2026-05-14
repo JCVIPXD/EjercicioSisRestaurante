@@ -1,3 +1,32 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+  session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
+  session_start();
+}
+if (!empty($_SESSION['usuario_id'])) {
+  header('Location: dashboard.php');
+  exit;
+}
+require_once '../config/database.php';
+require_once '../model/Usuario.php';
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $correo = trim($_POST['correo'] ?? '');
+  $clave  = $_POST['clave'] ?? '';
+  if ($correo && $clave) {
+    $usuario = Usuario::porCorreo($correo);
+    if ($usuario && password_verify($clave, $usuario['clave'])) {
+      session_regenerate_id(true);
+      $_SESSION['usuario_id']     = $usuario['id'];
+      $_SESSION['usuario_nombre'] = $usuario['nombre'];
+      $_SESSION['usuario_rol']    = $usuario['rol'];
+      header('Location: dashboard.php');
+      exit;
+    }
+  }
+  $error = 'Correo o clave incorrectos.';
+}
+?>
 <!doctype html>
 <html lang="es">
 <head>
@@ -15,10 +44,14 @@
     <section class="order-form w-100" style="max-width: 520px;">
       <p class="eyebrow mb-1">Panel interno</p>
       <h1 class="section-title mb-3">Ingreso administrador</h1>
-      <form action="dashboard.php" method="get" class="row g-3" novalidate>
+      <?php if ($error): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+      <?php endif; ?>
+      <form method="POST" class="row g-3" novalidate>
         <div class="col-12">
           <label for="correo" class="form-label">Correo</label>
-          <input type="email" class="form-control" id="correo" name="correo" required>
+             <input type="email" class="form-control" id="correo" name="correo" required
+               value="<?= htmlspecialchars($_POST['correo'] ?? '') ?>">
         </div>
         <div class="col-12">
           <label for="clave" class="form-label">Clave</label>
@@ -26,7 +59,6 @@
         </div>
         <div class="col-12 d-flex flex-wrap gap-2">
           <button class="btn btn-main" type="submit">Ingresar</button>
-          <button class="btn btn-outline-main" type="reset">Cancelar</button>
           <a class="btn btn-outline-main" href="../index.php">Volver al inicio</a>
         </div>
       </form>
